@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        REGISTRY = "docker.io"
+        REGISTRY = "https://index.docker.io/v1/"
         IMAGE_NAME = "koussaymarouani/studentsmanagement"
         DOCKER_CREDENTIALS = "dockerhub-creds"
     }
@@ -38,7 +38,7 @@ pipeline {
         stage('Docker Login & Push') {
             steps {
                 script {
-                    docker.withRegistry("https://${REGISTRY}", DOCKER_CREDENTIALS) {
+                    docker.withRegistry(REGISTRY, DOCKER_CREDENTIALS) {
                         dockerImage.push("${BUILD_NUMBER}")
                         dockerImage.push("latest")
                     }
