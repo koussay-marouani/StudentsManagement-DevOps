@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         REGISTRY = "docker.io"
-        IMAGE_NAME = "koussay/studentsmanagement"
+        IMAGE_NAME = "koussaymarouani/studentsmanagement"
         DOCKER_CREDENTIALS = "dockerhub-creds"
     }
 
