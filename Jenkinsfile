@@ -45,9 +45,12 @@ pipeline {
                 }
             }
         }
-       stage('MVN SONARQUBE') 
-        { steps 
-                    { sh "mvn sonar:sonar } } 
+       stage('MVN SONARQUBE') {
+    steps {
+        sh "mvn sonar:sonar"
+    }
+}
+ 
   }
 }
 
