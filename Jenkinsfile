@@ -5,6 +5,8 @@ pipeline {
         REGISTRY = "https://index.docker.io/v1/"
         IMAGE_NAME = "koussaymarouani/studentsmanagement"
         DOCKER_CREDENTIALS = "dockerhub-creds"
+        SONAR_HOST_URL = "http://localhost:9000"
+        SONAR_TOKEN = credentials('sonar-token') 
     }
 
     stages {
@@ -45,11 +47,19 @@ pipeline {
                 }
             }
         }
-       stage('MVN SONARQUBE') {
+        stage('MVN SONARQUBE') {
     steps {
-        sh "mvn sonar:sonar"
+        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+            sh """
+                mvn sonar:sonar \
+                -Dsonar.projectKey=student-management \
+                -Dsonar.host.url=http://localhost:9000 \
+                -Dsonar.login=${SONAR_TOKEN}
+            """
+        }
     }
 }
+
  
   }
 }
