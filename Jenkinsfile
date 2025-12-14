@@ -47,18 +47,7 @@ pipeline {
                 }
             }
         }
-        stage('MVN SONARQUBE') {
-    steps {
-        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-            sh """
-                mvn sonar:sonar \
-                -Dsonar.projectKey=student-management \
-                -Dsonar.host.url=http://localhost:9000 \
-                -Dsonar.login=${SONAR_TOKEN}
-            """
-        }
-    }
-}
+       
 stage('Deploy to Kubernetes') {
             steps {
                 script {
