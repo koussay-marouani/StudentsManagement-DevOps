@@ -59,7 +59,13 @@ pipeline {
         }
     }
 }
-
+stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    sh "kubectl set image deployment/spring-app spring=$DOCKER_IMAGE -n $KUBERNETES_NAMESPACE"
+                }
+            }
+        }
  
   }
 }
