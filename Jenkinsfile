@@ -1,61 +1,30 @@
 pipeline {
     agent any
-
     environment {
-        REGISTRY = "https://index.docker.io/v1/"
-        IMAGE_NAME = "koussaymarouani/studentsmanagement"
-        DOCKER_CREDENTIALS = "dockerhub-creds"
-        SONAR_HOST_URL = "http://localhost:9000"
-        SONAR_TOKEN = credentials('sonar-token') 
+        IMAGE = "koussaymarouani/studentsmanagement:latest"
+        NAMESPACE = "devops"
     }
-
     stages {
-
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/koussay-marouani/StudentsManagement-DevOps.git'
+                checkout scm
             }
         }
-
-        stage('Clean') {
-            steps {
-                sh 'mvn clean'
-            }
-        }
-
         stage('Build Maven') {
             steps {
-                sh 'mvn package -DskipTests'
+                sh './mvnw clean package -DskipTests'
             }
         }
-
-        stage('Docker Build') {
+        stage('Deploy to Kubernetes') {
             steps {
-                script {
-                    dockerImage = docker.build("${IMAGE_NAME}:${BUILD_NUMBER}")
-                }
+                sh "kubectl set image deployment/spring-app spring=$IMAGE -n $NAMESPACE"
             }
         }
-
-        stage('Docker Login & Push') {
-            steps {
-                script {
-                    docker.withRegistry(REGISTRY, DOCKER_CREDENTIALS) {
-                        dockerImage.push("${BUILD_NUMBER}")
-                        dockerImage.push("latest")
-                    }
-                }
-            }
+    }
+    post {
+        success {
+            echo 'Deployment to Kubernetes successful!'
         }
-       
-stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    sh "kubectl set image deployment/spring-app spring=$DOCKER_IMAGE -n $KUBERNETES_NAMESPACE"
-                }
-            }
-        }
- 
-  }
+    }
 }
 
