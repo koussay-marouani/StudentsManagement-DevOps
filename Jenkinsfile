@@ -50,11 +50,13 @@ pipeline {
     steps {
         sh '''
         kubectl apply -f k8s/namespace.yaml
+        kubectl delete deployment spring-app -n devops --ignore-not-found=true
         kubectl apply -f k8s/mysql-deployment.yaml -n devops
         kubectl apply -f k8s/spring-deployment.yaml -n devops
         '''
     }
 }
+
 
 
      }}
