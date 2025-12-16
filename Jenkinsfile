@@ -5,8 +5,7 @@ pipeline {
         REGISTRY = "https://index.docker.io/v1/"
         IMAGE_NAME = "koussaymarouani/studentsmanagement"
         DOCKER_CREDENTIALS = "dockerhub-creds"
-        SONAR_HOST_URL = "http://localhost:9000"
-        SONAR_TOKEN = credentials('sonar-token')
+        
     }
 
     stages {
