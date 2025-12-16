@@ -5,9 +5,17 @@ pipeline {
         REGISTRY = "https://index.docker.io/v1/"
         IMAGE_NAME = "koussaymarouani/studentsmanagement"
         DOCKER_CREDENTIALS = "dockerhub-creds"
+        SONAR_HOST_URL = "http://localhost:9000"
+        SONAR_TOKEN = credentials('sonar-token')
     }
 
     stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/koussay-marouani/StudentsManagement-DevOps.git'
+            }
+        }
 
         stage('Clean') {
             steps {
@@ -38,18 +46,4 @@ pipeline {
                     }
                 }
             }
-        }
-
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh '''
-                kubectl apply -f k8s/namespace.yaml
-                kubectl delete deployment spring-app -n devops --ignore-not-found=true
-                kubectl apply -f k8s/mysql-deployment.yaml -n devops
-                kubectl apply -f k8s/spring-deployment.yaml -n devops
-                '''
-            }
-        }
-    }
-}
-
+}}}
